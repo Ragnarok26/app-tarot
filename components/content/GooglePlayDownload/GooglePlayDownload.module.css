@@ -1,0 +1,19 @@
+.googlePlayWrapper {
+    text-align: center;
+    /* padding: .5rem; */
+    margin-bottom: -1rem;
+}
+
+.googlePlayWrapper.purple {
+    background: #8e24ac;
+}
+
+.googlePlayLink {
+    text-align: center;
+    display: block;
+}
+
+.googlePlayImage {
+    max-width: 160px;
+    height: auto;
+}

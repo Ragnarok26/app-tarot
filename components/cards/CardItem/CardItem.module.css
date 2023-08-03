@@ -1,0 +1,51 @@
+.category {
+    color: #666;
+}
+.cardItemContainer {
+    text-align: center;
+}
+.name {
+    font-size: 20px;
+    margin: .5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+.inverseCard {
+    text-align: left;
+}
+.label {
+    color: #666;
+    margin: 0;
+    font-size: 15px;
+    line-height: 22px;
+}
+.imageContainer {
+    max-width: 160px;
+    margin: 0 auto;
+}
+.image {
+    max-width: 100%;
+    padding: 0 .5rem;
+}
+.imageReverse {
+    max-width: 100%;
+    padding: 0 .5rem;
+    transform: rotate(180deg);
+}
+.description {
+    text-align: left;
+    margin-bottom: .8rem;
+}
+.cardExtraContainer {
+    margin-bottom: .8rem;
+}
+.cardExtra {
+    text-align: left;
+    line-height: 1.5rem;
+    margin-bottom: .8rem;
+}
+.cardAssociation {
+    text-align: left;
+    line-height: 1.5rem;
+    margin-bottom: .8rem;
+}

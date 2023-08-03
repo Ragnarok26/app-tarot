@@ -1,0 +1,19 @@
+.TiradaHerradura {
+    max-width: 160px;
+    display: inline-block;
+    width: 11%;
+    vertical-align: top;
+    margin: 0 4px;
+}
+
+.TiradaHerradura_level1 {
+    margin-top: 12%;
+}
+
+.TiradaHerradura_level2 {
+    margin-top: 24%;
+}
+
+.TiradaHerradura_level3 {
+    margin-top: 36%;
+}

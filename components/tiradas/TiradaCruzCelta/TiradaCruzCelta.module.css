@@ -1,0 +1,69 @@
+.TiradaCruzCelta_grid {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    align-items: center;
+}
+
+.TiradaCruzCelta {
+    max-width: 60px;
+    display: inline-block;
+    vertical-align: top;
+    margin: .65rem 1rem;
+}
+
+.TiradaCruzCelta.TiradaCruzCelta_left {
+    margin: .65rem 1.5rem .65rem .5rem;
+}
+
+.TiradaCruzCelta.TiradaCruzCelta_right {
+    margin: .65rem .5rem .65rem 1.5rem;
+}
+
+.TiradaCruzCelta_relative {
+    position: relative;
+}
+
+.TiradaCruzCelta_deforme {
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.TiradaCruzCelta_deforme img {
+    height: 60px;
+}
+
+.TiradaCruzCelta_horizontal {
+    max-width: 60px;
+    position: absolute;
+    top: 50%;
+    left: 49%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+@media (max-width: 400px) {
+    .TiradaCruzCelta {
+        max-width: 40px;
+        margin: .3rem .75rem;
+    }
+    .TiradaCruzCelta.TiradaCruzCelta_left {
+        margin: .3rem 1.5rem .3rem .5rem;
+    }
+    
+    .TiradaCruzCelta.TiradaCruzCelta_right {
+        margin: .3rem .5rem .3rem 1.5rem;
+    }
+
+    .TiradaCruzCelta_horizontal {
+        max-width: 40px;
+    }
+
+    .TiradaCruzCelta_deforme img {
+        height: 40px;
+    }
+
+  }

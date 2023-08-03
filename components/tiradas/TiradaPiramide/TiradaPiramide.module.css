@@ -1,0 +1,15 @@
+.TiradaPiramide {
+    max-width: 160px;
+    display: inline-block;
+    width: 11%;
+    vertical-align: top;
+    margin: 0 4px;
+}
+
+.TiradaPiramide_level1 {
+    margin-top: 14%;
+}
+
+.TiradaPiramideRowTwo {
+    margin-top: -12%;
+}

@@ -1,0 +1,93 @@
+:root {
+  --purple: #8E24AC;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-size: 16px;
+  background: #000;
+  line-height: 26px;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+* {
+  box-sizing: border-box;
+}
+img {
+  max-width: 100%;
+}
+h4 {
+  font-size: 16px;
+  margin: .5rem 0;
+  text-align: left;
+}
+.center {
+  text-align: center;
+}
+.layout {
+  background: #fff;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.container {
+  padding: .8rem 1.6rem;
+}
+.tematicBackground {
+  text-align: center;
+  padding: .5rem .5rem 1rem .5rem;
+}
+.tematicBackground.purple {
+  background: var(--purple);
+  text-align: center;
+  color: #fff;
+  padding: 0 .5rem .5rem;
+}
+.tematicTitle {
+  font-size: 16px;
+  text-align: center;
+  margin-top: 1.5rem;
+}
+.imageContainer {
+  width: 26%;
+  display: inline-block;
+  margin: 0 6px;
+}
+
+.questionWrapper {
+  padding: 1.2rem 1.2rem 0 1.2rem;
+  margin-bottom: -.6rem;
+  box-shadow: 1px 1px 8px rgb(0 0 0 / 20%);
+  max-width: 280px;
+  margin: 20px auto;
+  border-radius: 8px;
+  text-align: center;
+  padding: 1.25rem;
+}
+
+.questionWrapper .question {
+  color: #444;
+  font-size: 1rem;
+  line-height: 1.8rem;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.questionWrapper .answer {
+  color: #000;
+  font-size: 1.8rem;
+  margin: 0.5rem 0;
+}
+
+.isPurple {
+  background: var(--purple);
+  color: #fff;
+}

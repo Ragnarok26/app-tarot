@@ -1,0 +1,26 @@
+.imageContainer {
+    text-align: center;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+}
+
+.imageContainer img {
+    /* padding: 0 .65rem; */
+    vertical-align: middle;
+}
+
+.name {
+    margin: 0;
+    padding: 0rem .2rem .4rem;
+    font-size: 13px;
+    line-height: 18px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.cardNo {
+    transform: rotate(180deg);
+}
