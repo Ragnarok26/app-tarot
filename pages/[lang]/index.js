@@ -10,10 +10,13 @@ import cn from 'classnames'
 function Index({ content }) {
   // From URL
   const router = useRouter()
-  const { tematic, card, zodiac, question, tirada, date } = router.query
+  const { tematic, card, zodiac, question, tirada } = router.query
   
   // From content file
   const { labels, cards, tematics, zodiac: contentZodiac, tagCards, tiradaHerraduraLabel, combinations } = content
+
+  //Local Date
+  var date = new Date().toLocaleDateString(content.labels.language, { day: 'numeric', month: 'long', year: 'numeric'});
 
   // Get cards and validations
   const optionsCard = cardsAvailable[+tematic];
@@ -159,7 +162,7 @@ function Index({ content }) {
             className="container"
           >
             <div style={{ textAlign: 'center', fontSize: '1.35rem', margin: '.6rem 0' }}>
-              <b>Interpretación</b>
+              <b>{content.labels.cardInterpretationsLabel}</b>
             </div>
             <div style={{ fontSize: '.96rem', margin: '1rem 0' }}>
               <p dangerouslySetInnerHTML={{ __html: combinations && combinations[tematic][card]?.content }}></p>
