@@ -33,7 +33,6 @@ function Index({ content }) {
 
   return (
     <div>
-      <textarea>{JSON.stringify(content)}</textarea>
       <Head>
         <title>{content.appName}</title>
         <meta name="description" content={content.description} />
