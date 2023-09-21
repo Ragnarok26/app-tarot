@@ -194,7 +194,7 @@ const ReadMore = ({ descr, limit, readLess, readMore }) => {
 
 const TagsDescription = ({tags}) =>{
   return(
-    <div style={{width: '60%', position: 'relative'}} className='container'>
+    <div style={{width: '270px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }} className='container'>
       {
         tags.map((item) =>{
           return <div className={s.tagsDisplay} >
