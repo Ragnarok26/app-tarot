@@ -1,227 +1,219 @@
-import s from './CardItem.module.css'
-import { LinkWrapper } from '../../content/'
-import Image from 'next/image'
-import React from 'react';
-import {useState} from 'react';
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { GooglePlayDownload, BannerDownload, ErrorLoadCard, LinkWrapper, ZodiacName } from '../../components/content'
+import { CardItem, CardTiradas, ContentYesOrNot } from '../../components/cards'
+import { cardsAvailable } from '../../params/params'
+import { getValidCards, getZodiac } from '../../utils/util'
+import { getContentFromFirestore, getPathsFromFirestore } from '../../services/contentFirebase'
+import cn from 'classnames'
 
-const CardItem = ({ link, labels, props, tematic, qtyCards, tematicFlag }) => {
-  tematic = +tematic
-  const isShowInterpretations = props.interpretation && [1000].includes(tematic)
-  const isShowExtras = [2000].includes(tematic)
-  const isShowAssociations = props.associations && [8000].includes(tematic)
-  const isShowInverse = [10000].includes(tematic)
-  const isTematicYesOrNot = 9000;
-  const isShowBirthCardExtraContent = [8000].includes(tematic)
+function Index({ content }) {
+  // From URL
+  const router = useRouter()
+  const { tematic, card, zodiac, question, tirada, date } = router.query
 
-  // Contenido
-  const f = {
-    4000: 'Trabajo',
-    5000: 'Amor',
-    6000: 'Salud',
-    7000: 'Dinero',
-  };
+  // From content file
+  const { labels, cards, tematics, zodiac: contentZodiac, tagCards, tiradaHerraduraLabel, combinations } = content
 
-  const description = props.tematico.find(e => e.name === f[tematic])?.description || props.significado;
-  const description_y_representation = props.description_y_representation;
-  const carta_nacimiento_description = props.carta_nacimiento_description;
+  //Local Date
+  var dateFormated = new Date();
+  var month = 0;
+  if(date!=null){
+    var dateSplit = date.split(" of ");
+    for(var i=0; i < content.labels.months.length; i++){
+      if(content.labels.months[i] == dateSplit[1].toLowerCase()){
+        month = i;
+      }
+    }
+    const newDate = new Date(parseInt(dateSplit[2]), month, parseInt(dateSplit[0]));
+    console.log(newDate)
+    dateFormated = newDate.toLocaleDateString(content.labels.language, { day: 'numeric', month: 'long', year: 'numeric'});
+  }else{
+    dateFormated = new Date().toLocaleDateString(content.labels.language, { day: 'numeric', month: 'long', year: 'numeric'});
+  }
+
+  // Get cards and validations
+  const optionsCard = cardsAvailable[+tematic];
+  const { displayCards, totalYes, totalNo, hasErrorCard } = getValidCards(card, cards, optionsCard, tirada)
+  const { displayZodiac, hasErrorZodiac } = getZodiac(zodiac, contentZodiac)
+  const titleTematic = tematics?.[tematic]?.[0]
+  const tematicFlag = tematics?.[tematic]?.[1]
+
+  if (optionsCard?.isShowContentCombination) {
+    if (combinations && combinations[tematic] && !combinations[tematic][card]?.active) {
+      return <ErrorLoadCard labels={labels} />
+    }
+  }
+
+  if (hasErrorCard || hasErrorZodiac) {
+    return <ErrorLoadCard labels={labels} />
+  }
 
   return (
-    // <LinkWrapper link={link}>
-      <div>
-        {
-          props.name && <h3 className={s.name}>{props.name}</h3>
-        }
-        <div className={s.cardItemContainer}>
+    <div>
+      <Head>
+        <title>{content.appName}</title>
+        <meta name="description" content={content.description} />
+        <link rel="icon" href="/favicon.ico" />
+        <meta property="og:site_name" content={content.appName} />
+        <meta property="og:title" content={content.appName} />
+        <meta property="og:description" content={content.description} />
+        <meta property="og:image" content="https://tarot-static-web.vercel.app/thumbl.png" />
+        <meta property="og:type" content="website" />
+        <meta name="theme-color" content="#8E24AC" />
+      </Head>
 
-          {!isTematicYesOrNot && <h3 className={s.name}>{props.name}</h3>}
+      <div className="layout">
 
-          <div className={s.imageContainer}>
-            <Image
-              width={146.5}
-              height={280.5}
-              className={s.image}
-              alt={s.name}
-              src={ `/card/ic_ar_m${props.id}.png?q=100` }
+        {/* 1. HEADER */}
+        {/* ================================================ */}
+        <div className={cn({ 'isPurple': !!optionsCard?.isPurpleTirada })}>
+          <LinkWrapper link={labels.downloadLink}>
+            <GooglePlayDownload url={labels.imgGooglePlay} />
+            <BannerDownload props={labels.downloadLabel} />
+          </LinkWrapper>
+        </div>
+
+        {/* 2. TIRADAS */}
+        {/* ================================================ */}
+        { optionsCard?.isPurpleTirada ? (
+          <div className={cn('tematicBackground', { 'isPurple': !!optionsCard?.isPurpleTirada })}>
+            <LinkWrapper link={labels.downloadLink}>
+              <h4 className='center'>{titleTematic}</h4>
+              <CardTiradas
+                tematic={tematic}
+                displayCards={displayCards}
+                link={labels.downloadLink}
+                tirada={tirada}
+              />
+              <BannerDownload props={labels.downloadLabel} />
+            </LinkWrapper>
+          </div>
+        ) : null }
+
+        {/* 3. CONTENT */}
+        {/* ================================================ */}
+        {optionsCard?.showTitleInContent && (
+          <div style={{ textAlign: 'center', fontSize: '1.35rem', margin: '.6rem 0' }}>
+            {titleTematic}
+          </div>
+        )}
+
+        {optionsCard?.isShowDate && (
+          <div style={{ textAlign: 'center', fontSize: '1rem', margin: '.6rem 0', color: '#666' }}>
+            {dateFormated}
+          </div>
+        )}
+
+        {optionsCard?.isShowContentQuestion &&
+          <div>
+            <LinkWrapper link={labels.downloadLink}>
+              <div className="questionWrapper">
+                {question &&
+                  <h4 className="question">{question}</h4>
+                }
+                <div className="answer">{
+                  (totalYes?.length > totalNo?.length) ? labels.yesLabel : labels.noLabel
+                }</div>
+              </div>
+            </LinkWrapper>
+
+            <CardTiradas
+              props={displayCards}
+              isQuestion={true}
+              link={labels.downloadLink}
+            />
+
+            <div className="container">
+              <h4>{labels.resultYesOrNotLabel}</h4>
+              <p>{labels.resultDescription}</p>
+            </div>
+
+            <ContentYesOrNot
+              labels={content.labels}
+              cards={displayCards}
+              link={labels.downloadLink}
             />
           </div>
+        }
 
-          {
-            props.hasOwnProperty('tags') && tematicFlag == true
-            ? props.tags.length > 0
-              ? <div style={{display: 'flex', justifyContent: 'center'}}>
-                  <TagsDescription tags={props.tags}/>
+        {optionsCard?.isShowContentDefault && (
+          <div className="container">
+            {/* Content */}
+            <main>
+              {displayCards.map((card, i) => (
+                <div key={i}>
+                  {
+                    tagCards[tirada || displayCards?.length] &&
+                    <div style={{ color: '#888', marginTop: '1rem' }}>
+                      {tagCards[tirada || displayCards?.length][i]}
+                    </div>
+                  }
+                  <CardItem
+                    props={card}
+                    labels={labels}
+                    tematic={tematic}
+                    qtyCards={displayCards.length}
+                    link={labels.downloadLink}
+                    tematicFlag={tematicFlag}
+                  ></CardItem>
                 </div>
-              : null
-            :null
-          }
+              ))
+              }
+            </main>
 
-          {
-            props.hasOwnProperty('synthesis') && tematicFlag == true
-            ? <p className={s.labelBackground} dangerouslySetInnerHTML={{ __html: props.synthesis }}></p>
-            :null
-          }
-          {/* <p className={s.label} dangerouslySetInnerHTML={{ __html: props.simbologia }}></p> */}
+            {/* Zodiac Name */}
+            <LinkWrapper link={labels.downloadLink}>
+              {
+                displayZodiac && <ZodiacName label={labels.zodiacLabel} props={displayZodiac}></ZodiacName>
+              }
+            </LinkWrapper>
 
-          {
-            isShowInverse &&
-            <div>
-              <h3 className={s.inverseCard}>{labels.inverseSignificado}</h3>
-            </div>
-          }
-
-          {
-            <ReadMore descr={description} styleClass={s.description} limit={170} readLess={labels.readLess} readMore={labels.readMore} flag={tematicFlag}/>
-            // <p className={s.description} dangerouslySetInnerHTML={{ __html: description }}></p>
-          }
-
-          {
-            isShowBirthCardExtraContent && (
-              <ReadMore descr={carta_nacimiento_description} styleClass={s.description} limit={170} readLess={labels.readLess} readMore={labels.readMore} flag={tematicFlag}/>
-              // <p className={s.description} dangerouslySetInnerHTML={{ __html: carta_nacimiento_description }}></p>
-            )
-          }
-
-          {
-            isShowInverse &&
-            <div>
-              <h3 className={s.inverseCard}>{labels.inverseDescriptionTitle}</h3>
-              {/* <p className={s.description} dangerouslySetInnerHTML={{ __html: description_y_representation }}></p> */}
-              <ReadMore descr={description_y_representation} styleClass={s.description} limit={170} readLess={labels.readLess} readMore={labels.readMore} flag={tematicFlag}/>
-            </div>
-          }
-
-          {
-            (isShowInterpretations && qtyCards === 1) &&
-            <div>
-              <h4>{labels.cardInterpretationsLabel}</h4>
-              <div className={s.description}>{props.interpretation}</div>
-            </div>
-          }
-
-          {
-            isShowExtras && <CardExtras extras={props.tematico} />
-          }
-
-          {
-            isShowAssociations &&
-            <div>
-              <h4>{labels.cardAsociationsLabel}:</h4>
-              <CardAssociations associations={props.associations} />
-            </div>
-          }
-
-          {
-            isShowInverse &&
-            <div>
-                <h3 className={s.inverseCard}>{labels.inverseCard}</h3>
-                <div className={s.imageContainer}>
-                  <Image
-                    width={146.5}
-                    height={280.5}
-                    className={s.imageReverse}
-                    alt={s.name}
-                    src={ `/card/ic_ar_m${props.id}.png?q=100` }
-                  />
-                </div>
-                <ReadMore descr={props.inversa_simbologia} styleClass={s.label} limit={170} readLess={labels.readLess} readMore={labels.readMore} flag={tematicFlag}/>
-                {/* <p className={s.label}>{props.inversa_simbologia}</p> */}
-                <h3 className={s.inverseCard}>{labels.inverseSignificado}</h3>
-                <ReadMore descr={props.inversa_significado} styleClass={s.description} limit={170} readLess={labels.readLess} readMore={labels.readMore} flag={tematicFlag}/>
-                {/* <p className={s.description}>{props.inversa_significado}</p> */}
-            </div>
-          }
-        </div>
-      </div>
-    // </LinkWrapper>
-  )
-}
-const CardExtras = ({ extras }) => {
-  return (
-    <div className={s.cardExtraContainer}>
-      {
-        extras.map((e, i) =>
-          <div key={i} className={s.cardExtra}>
-            <div><h4>{e.name}</h4></div>
-            <div>{e.description}</div>
           </div>
-        )
-      }
-    </div>
-  )
-}
-const CardAssociations = ({ associations }) => {
-  return (
-    <div className="CardAssociations">
-      {
-        associations.map((e, i) =>
-          <div key={i} className={s.cardAssociation}>
-            <b>{e.name}</b>: {e.description}
-          </div>
-        )
-      }
-    </div>
-  )
-}
-
-const ReadMore = ({ descr, styleClass, limit, readLess, readMore, flag }) => {
-  const [showAll, setShowAll] = useState(false);
-  if(flag==true){
-    return (
-      <span>
-        {descr.length > limit ? (
-          <>
-            {showAll ? (
-              <div className={s.description}>
-                <p className={styleClass} dangerouslySetInnerHTML={{ __html: descr }}></p>
-                <a
-                  onClick={() => setShowAll(false)}
-                  className={s.textPrimary}
-                >
-                  {readLess}
-                </a>
-              </div>
-            ) : (
-              <div className={s.description}>
-                <p className={styleClass} dangerouslySetInnerHTML={{ __html: descr.substring(0, limit).concat("...") }}></p>
-                <a onClick={() => setShowAll(true)} className={s.textPrimary}>
-                {readMore}
-                </a>
-              </div>
-            )}
-          </>
-        ) : (
-          descr
         )}
-      </span>
-    );
-  }else{
-    return(
-      <p className={styleClass} dangerouslySetInnerHTML={{ __html: descr }}></p>
-    );
+
+        {optionsCard?.isShowContentCombination && (
+          <div
+            style={{ border: "1px solid #ccc", borderRadius: "8px", margin: "1rem" }}
+            className="container"
+          >
+            <div style={{ textAlign: 'center', fontSize: '1.35rem', margin: '.6rem 0' }}>
+              <b>{content.labels.cardInterpretationsLabel}</b>
+            </div>
+            <div style={{ fontSize: '.96rem', margin: '1rem 0' }}>
+              <p dangerouslySetInnerHTML={{ __html: combinations && combinations[tematic][card]?.content }}></p>
+            </div>
+          </div>
+        )}
+
+        {/* 4. FOOTER */}
+        {/* ================================================ */}
+        <LinkWrapper link={labels.downloadLink}>
+          <BannerDownload props={labels.downloadLabel} />
+          <GooglePlayDownload url={labels.imgGooglePlay} />
+        </LinkWrapper>
+
+      </div>
+    </div>
+  )
+}
+
+export async function getStaticPaths() {
+  let pathsData = await getPathsFromFirestore();
+  return {
+    paths: pathsData.paths,
+    fallback: false
+  };
+}
+
+export async function getStaticProps({ params }) {
+  const content = await getContentFromFirestore(`${params.lang}`);
+  
+  return {
+    props: {
+      content,
+    }
   }
-};
+}
 
-const TagsDescription = ({tags}) =>{
-  // tags.sort(function (a, b) {
-  //   return b.length - a.length;
-  // });
-
-  return(
-    <div style={{width:'55%'}}>
-      <p style={{textAlign: 'justify'}}>
-            {/* // <div style={{width: '77%', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '4px'}} className='container'> */}
-            {
-              tags.map((item) =>{
-                // return <div className={s.tagsDisplay} >
-                //     <span style={{fontSize: '12px', padding: '0 8px 0 8px'}}>{item}</span>
-                // </div>
-                return <span><span className={s.tagsDisplay}>{item}</span> </span>
-              })
-            }
-            </p>
-        </div>
-  );
-};
-
-
-export default CardItem
+export default Index
