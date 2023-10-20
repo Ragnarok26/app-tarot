@@ -10,19 +10,34 @@ import cn from 'classnames'
 function Index({ content }) {
   // From URL
   const router = useRouter()
-  const { tematic, card, zodiac, question, tirada } = router.query
-  
+  const { tematic, card, zodiac, question, tirada, date } = router.query
+
   // From content file
   const { labels, cards, tematics, zodiac: contentZodiac, tagCards, tiradaHerraduraLabel, combinations } = content
 
   //Local Date
-  var date = new Date().toLocaleDateString(content.labels.language, { day: 'numeric', month: 'long', year: 'numeric'});
+  var dateFormated = new Date();
+  var month = 0;
+  if(date!=null){
+    var dateSplit = date.split(" of ");
+    for(var i=0; i < content.labels.months.length; i++){
+      if(content.labels.months[i] == dateSplit[1].toLowerCase()){
+        month = i;
+      }
+    }
+    const newDate = new Date(parseInt(dateSplit[2]), month, parseInt(dateSplit[0]));
+    console.log(newDate)
+    dateFormated = newDate.toLocaleDateString(content.labels.language, { day: 'numeric', month: 'long', year: 'numeric'});
+  }else{
+    dateFormated = new Date().toLocaleDateString(content.labels.language, { day: 'numeric', month: 'long', year: 'numeric'});
+  }
 
   // Get cards and validations
   const optionsCard = cardsAvailable[+tematic];
   const { displayCards, totalYes, totalNo, hasErrorCard } = getValidCards(card, cards, optionsCard, tirada)
   const { displayZodiac, hasErrorZodiac } = getZodiac(zodiac, contentZodiac)
-  const titleTematic = tematics?.[tematic]
+  const titleTematic = tematics?.[tematic]?.[0]
+  const tematicFlag = tematics?.[tematic]?.[1]
 
   if (optionsCard?.isShowContentCombination) {
     if (combinations && combinations[tematic] && !combinations[tematic][card]?.active) {
@@ -86,7 +101,7 @@ function Index({ content }) {
 
         {optionsCard?.isShowDate && (
           <div style={{ textAlign: 'center', fontSize: '1rem', margin: '.6rem 0', color: '#666' }}>
-            {date}
+            {dateFormated}
           </div>
         )}
 
@@ -140,6 +155,7 @@ function Index({ content }) {
                     tematic={tematic}
                     qtyCards={displayCards.length}
                     link={labels.downloadLink}
+                    tematicFlag={tematicFlag}
                   ></CardItem>
                 </div>
               ))
