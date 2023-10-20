@@ -19,13 +19,13 @@ function Index({ content }) {
   var dateFormated = new Date();
   var month = 0;
   if(date!=null){
-    var dateSplit = date.split(" of ");
+    var dateSplit = date.split(" ");
     for(var i=0; i < content.labels.months.length; i++){
-      if(content.labels.months[i] == dateSplit[1].toLowerCase()){
+      if(content.labels.months[i] == dateSplit[2].toLowerCase()){
         month = i;
       }
     }
-    const newDate = new Date(parseInt(dateSplit[2]), month, parseInt(dateSplit[0]));
+    const newDate = new Date(parseInt(dateSplit[4]), month, parseInt(dateSplit[0]));
     console.log(newDate)
     dateFormated = newDate.toLocaleDateString(content.labels.language, { day: 'numeric', month: 'long', year: 'numeric'});
   }else{
