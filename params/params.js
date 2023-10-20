@@ -1,10 +1,14 @@
+//Las listas dan el acceso a las combinaciones:
+//2 -- combinaciones de 14000 Tarot de la pareja
+//3 -- combinaciones de 13000 El camino del día
+//4 -- combinaciones de 12000 Tirada clásica
 const cardsAvailable = {
     1000: { // "Tarot Diario"
         isPurpleTirada: true,
         isShowContentDefault: true,
         min: 0,
         max: 21,
-        list: [1, 3, 5],
+        list: [1, 2, 3, 5],
         herradura: [7],
         piramide: [10],
         cruzCelta: [10],
