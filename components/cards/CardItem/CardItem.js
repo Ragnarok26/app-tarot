@@ -4,7 +4,7 @@ import Image from 'next/image'
 import React from 'react';
 import {useState} from 'react';
 
-const CardItem = ({ link, labels, props, tematic, qtyCards, tematicFlag }) => {
+const CardItem = ({ link, labels, props, tematic, qtyCards, tematicFlags }) => {
   tematic = +tematic
   const isShowInterpretations = props.interpretation && [1000].includes(tematic)
   const isShowExtras = [2000].includes(tematic)
@@ -46,7 +46,7 @@ const CardItem = ({ link, labels, props, tematic, qtyCards, tematicFlag }) => {
           </div>
 
           {
-            props.hasOwnProperty('tags') && tematicFlag == true
+            props.hasOwnProperty('tags') && tematicFlags.flagTags == true
             ? props.tags.length > 0
               ? <div style={{display: 'flex', justifyContent: 'center'}}>
                   <TagsDescription tags={props.tags}/>
@@ -56,8 +56,8 @@ const CardItem = ({ link, labels, props, tematic, qtyCards, tematicFlag }) => {
           }
 
           {
-            props.hasOwnProperty('synthesis') && tematicFlag == true
-            ? <p className={s.labelBackground} dangerouslySetInnerHTML={{ __html: props.synthesis }}></p>
+            props.hasOwnProperty('synthesis') && tematicFlags.flagSynthesis == true
+            ? <p style={{margin: "5px 0 5px 0"}} className={s.labelBackground} dangerouslySetInnerHTML={{ __html: props.synthesis }}></p>
             :null
           }
           {/* <p className={s.label} dangerouslySetInnerHTML={{ __html: props.simbologia }}></p> */}
@@ -70,13 +70,13 @@ const CardItem = ({ link, labels, props, tematic, qtyCards, tematicFlag }) => {
           }
 
           {
-            <ReadMore descr={description} styleClass={s.description} limit={170} readLess={labels.readLess} readMore={labels.readMore} flag={tematicFlag}/>
+            <ReadMore descr={description} styleClass={s.description} limit={170} readLess={labels.readLess} readMore={labels.readMore} flag={tematicFlags.flagReadMore}/>
             // <p className={s.description} dangerouslySetInnerHTML={{ __html: description }}></p>
           }
 
           {
             isShowBirthCardExtraContent && (
-              <ReadMore descr={carta_nacimiento_description} styleClass={s.description} limit={170} readLess={labels.readLess} readMore={labels.readMore} flag={tematicFlag}/>
+              <ReadMore descr={carta_nacimiento_description} styleClass={s.description} limit={170} readLess={labels.readLess} readMore={labels.readMore} flag={tematicFlags.flagReadMore}/>
               // <p className={s.description} dangerouslySetInnerHTML={{ __html: carta_nacimiento_description }}></p>
             )
           }
@@ -86,7 +86,7 @@ const CardItem = ({ link, labels, props, tematic, qtyCards, tematicFlag }) => {
             <div>
               <h3 className={s.inverseCard}>{labels.inverseDescriptionTitle}</h3>
               {/* <p className={s.description} dangerouslySetInnerHTML={{ __html: description_y_representation }}></p> */}
-              <ReadMore descr={description_y_representation} styleClass={s.description} limit={170} readLess={labels.readLess} readMore={labels.readMore} flag={tematicFlag}/>
+              <ReadMore descr={description_y_representation} styleClass={s.description} limit={170} readLess={labels.readLess} readMore={labels.readMore} flag={tematicFlags.flagReadMore}/>
             </div>
           }
 
@@ -123,10 +123,10 @@ const CardItem = ({ link, labels, props, tematic, qtyCards, tematicFlag }) => {
                     src={ `/card/ic_ar_m${props.id}.png?q=100` }
                   />
                 </div>
-                <ReadMore descr={props.inversa_simbologia} styleClass={s.label} limit={170} readLess={labels.readLess} readMore={labels.readMore} flag={tematicFlag}/>
+                <ReadMore descr={props.inversa_simbologia} styleClass={s.label} limit={170} readLess={labels.readLess} readMore={labels.readMore} flag={tematicFlags.flagReadMore}/>
                 {/* <p className={s.label}>{props.inversa_simbologia}</p> */}
                 <h3 className={s.inverseCard}>{labels.inverseSignificado}</h3>
-                <ReadMore descr={props.inversa_significado} styleClass={s.description} limit={170} readLess={labels.readLess} readMore={labels.readMore} flag={tematicFlag}/>
+                <ReadMore descr={props.inversa_significado} styleClass={s.description} limit={170} readLess={labels.readLess} readMore={labels.readMore} flag={tematicFlags.flagReadMore}/>
                 {/* <p className={s.description}>{props.inversa_significado}</p> */}
             </div>
           }
@@ -208,13 +208,9 @@ const TagsDescription = ({tags}) =>{
 
   return(
     <div style={{width:'55%'}}>
-      <p style={{textAlign: 'justify'}}>
-            {/* // <div style={{width: '77%', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '4px'}} className='container'> */}
+      <p style={{textAlign: 'justify', margin: "10px 0 20px 0", lineHeight: "2.3"}}>
             {
               tags.map((item) =>{
-                // return <div className={s.tagsDisplay} >
-                //     <span style={{fontSize: '12px', padding: '0 8px 0 8px'}}>{item}</span>
-                // </div>
                 return <span><span className={s.tagsDisplay}>{item}</span> </span>
               })
             }
