@@ -26,7 +26,6 @@ function Index({ content }) {
       }
     }
     const newDate = new Date(parseInt(dateSplit[4]), month, parseInt(dateSplit[0]));
-    console.log(newDate)
     dateFormated = newDate.toLocaleDateString(content.labels.language, { day: 'numeric', month: 'long', year: 'numeric'});
   }else{
     dateFormated = new Date().toLocaleDateString(content.labels.language, { day: 'numeric', month: 'long', year: 'numeric'});
@@ -36,8 +35,8 @@ function Index({ content }) {
   const optionsCard = cardsAvailable[+tematic];
   const { displayCards, totalYes, totalNo, hasErrorCard } = getValidCards(card, cards, optionsCard, tirada)
   const { displayZodiac, hasErrorZodiac } = getZodiac(zodiac, contentZodiac)
-  const titleTematic = tematics?.[tematic]?.[0]
-  const tematicFlag = tematics?.[tematic]?.[1]
+  const titleTematic = tematics?.[tematic]?.titleTematic
+  const tematicFlags = tematics?.[tematic]
 
   if (optionsCard?.isShowContentCombination) {
     if (combinations && combinations[tematic] && !combinations[tematic][card]?.active) {
@@ -155,7 +154,7 @@ function Index({ content }) {
                     tematic={tematic}
                     qtyCards={displayCards.length}
                     link={labels.downloadLink}
-                    tematicFlag={tematicFlag}
+                    tematicFlags={tematicFlags}
                   ></CardItem>
                 </div>
               ))
