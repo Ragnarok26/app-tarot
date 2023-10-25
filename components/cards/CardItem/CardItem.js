@@ -208,7 +208,7 @@ const TagsDescription = ({tags}) =>{
 
   return(
     <div style={{width:'65%'}}>
-      <p style={{textAlign: 'center', margin: "10% 0 50% 0", lineHeight: "2.3"}}>
+      <p style={{textAlign: 'center', margin: "10% 0 0 0", lineHeight: "2.3"}}>
         {
           tags.map((item) =>{
             return <span><span className={s.tagsDisplay}>{item}</span> </span>
