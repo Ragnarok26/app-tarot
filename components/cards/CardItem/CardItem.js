@@ -202,20 +202,20 @@ const ReadMore = ({ descr, styleClass, limit, readLess, readMore, flag }) => {
 };
 
 const TagsDescription = ({tags}) =>{
-  // tags.sort(function (a, b) {
-  //   return b.length - a.length;
-  // });
+  tags.sort(function (a, b) {
+    return b.length - a.length;
+  });
 
   return(
-    <div style={{width:'55%'}}>
-      <p style={{textAlign: 'justify', margin: "10% 0 50% 0", lineHeight: "2.3"}}>
+    <div style={{width:'65%'}}>
+      <p style={{textAlign: 'center', margin: "10% 0 0 0", lineHeight: "2.3"}}>
         {
           tags.map((item) =>{
             return <span><span className={s.tagsDisplay}>{item}</span> </span>
           })
         }
-        <br/>
       </p>
+      <br/>
     </div>
   );
 };
