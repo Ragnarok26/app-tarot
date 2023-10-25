@@ -63,10 +63,10 @@
     color: #0C94E4;
 }
 .tagsDisplay {
-    /* float: left; */
+    float: left;
     border:0.1px solid #D6DBDF;
-    margin: 0 4px 4px 0;
-    padding: 5px;
+    margin: 0 8px 5px 0;
+    padding: 2px 5px 2px 5px;
     border-radius: 10px
 }
 

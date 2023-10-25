@@ -207,15 +207,12 @@ const TagsDescription = ({tags}) =>{
   });
 
   return(
-    <div style={{width:'65%'}}>
-      <p style={{textAlign: 'center', margin: "10% 0 0 0", lineHeight: "2.3"}}>
-        {
-          tags.map((item) =>{
-            return <span><span className={s.tagsDisplay}>{item}</span> </span>
-          })
-        }
-      </p>
-      <br/>
+    <div style={{width: '65%', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', margin: '6% 0 6% 0'}}>
+      {
+        tags.map((item) =>{
+          return <span className={s.tagsDisplay}>{item}</span>
+        })
+      }
     </div>
   );
 };
