@@ -214,8 +214,8 @@ const TagsDescription = ({tags}) =>{
             return <span><span className={s.tagsDisplay}>{item}</span> </span>
           })
         }
-        <br/>
       </p>
+      <br/>
     </div>
   );
 };
