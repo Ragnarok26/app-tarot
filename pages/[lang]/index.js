@@ -6,6 +6,8 @@ import { cardsAvailable } from '../../params/params'
 import { getValidCards, getZodiac } from '../../utils/util'
 import { getContentFromFirestore, getPathsFromFirestore } from '../../services/contentFirebase'
 import cn from 'classnames'
+import ReactPlayer from 'react-player'
+import { useState } from 'react'
 
 function Index({ content }) {
   // From URL
@@ -37,6 +39,10 @@ function Index({ content }) {
   const { displayZodiac, hasErrorZodiac } = getZodiac(zodiac, contentZodiac)
   const titleTematic = tematics?.[tematic]?.titleTematic
   const tematicFlags = tematics?.[tematic]
+  const videoFlag = tematics?.[tematic]?.videoFlag
+  const urlVideoCombination = combinations[tematic]?.[card]?.urlVideoCombination
+  const expandedTextFlag = tematics?.[tematic]?.expandedTextFlag
+  const textTranscription = "Ver transcripción"
 
   if (optionsCard?.isShowContentCombination) {
     if (combinations && combinations[tematic] && !combinations[tematic][card]?.active) {
@@ -71,6 +77,16 @@ function Index({ content }) {
             <GooglePlayDownload url={labels.imgGooglePlay} />
             <BannerDownload props={labels.downloadLabel} />
           </LinkWrapper>
+          {
+            videoFlag == true && combinations[tematic][card].hasOwnProperty('urlVideoCombination') && urlVideoCombination != ""
+            ? <div >
+                <ReactPlayer url={urlVideoCombination}
+                  width='100%'
+                  controls={true}
+                />
+              </div>
+            : null
+          }
         </div>
 
         {/* 2. TIRADAS */}
@@ -171,19 +187,13 @@ function Index({ content }) {
           </div>
         )}
 
-        {optionsCard?.isShowContentCombination && (
-          <div
-            style={{ border: "1px solid #ccc", borderRadius: "8px", margin: "1rem" }}
-            className="container"
-          >
-            <div style={{ textAlign: 'center', fontSize: '1.35rem', margin: '.6rem 0' }}>
-              <b>{content.labels.cardInterpretationsLabel}</b>
-            </div>
-            <div style={{ fontSize: '.96rem', margin: '1rem 0' }}>
-              <p dangerouslySetInnerHTML={{ __html: combinations && combinations[tematic][card]?.content }}></p>
-            </div>
-          </div>
-        )}
+        <ShowTranscription
+          extendedFlag={expandedTextFlag}
+          textTranscription={textTranscription}
+          isShowContentCombination={optionsCard?.isShowContentCombination}
+          cardInterpretationsLabel={content.labels.cardInterpretationsLabel}
+          combinations={combinations}
+          content={combinations[tematic]?.[card]?.content}/>
 
         {/* 4. FOOTER */}
         {/* ================================================ */}
@@ -207,11 +217,59 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const content = await getContentFromFirestore(`${params.lang}`);
-  
   return {
     props: {
       content,
     }
+  }
+}
+
+const ShowTranscription = ({extendedFlag, textTranscription, isShowContentCombination, cardInterpretationsLabel, combinations, content }) => {
+  const [expandedText, setExpandedText] = useState(false)
+  if(extendedFlag){
+    return(
+      <>
+        <div className='container'>
+          <span onClick={()=> {setExpandedText(!expandedText)}}> {expandedText == false ?<span style={{fontSize: '20px'}}>►</span> : <span>▼</span> } {textTranscription}</span>
+        </div>
+        {
+          expandedText == true
+          ? <>
+              { isShowContentCombination && (
+              <div
+                style={{ border: "1px solid #ccc", borderRadius: "8px", margin: "1rem" }}
+                className="container"
+              >
+                <div style={{ textAlign: 'center', fontSize: '1.35rem', margin: '.6rem 0' }}>
+                  <b>{cardInterpretationsLabel}</b>
+                </div>
+                <div style={{ fontSize: '.96rem', margin: '1rem 0' }}>
+                  <p dangerouslySetInnerHTML={{ __html: combinations && content }}></p>
+                </div>
+              </div>
+              )}
+            </>
+          : null
+        }
+      </>)
+  }
+  else{
+    return(
+      <>
+        { isShowContentCombination && (
+        <div
+          style={{ border: "1px solid #ccc", borderRadius: "8px", margin: "1rem" }}
+          className="container"
+        >
+          <div style={{ textAlign: 'center', fontSize: '1.35rem', margin: '.6rem 0' }}>
+            <b>{cardInterpretationsLabel}</b>
+          </div>
+          <div style={{ fontSize: '.96rem', margin: '1rem 0' }}>
+            <p dangerouslySetInnerHTML={{ __html: combinations && content }}></p>
+          </div>
+        </div>
+        )}
+      </>)
   }
 }
 
