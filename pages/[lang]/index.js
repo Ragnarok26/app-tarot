@@ -7,7 +7,8 @@ import { getValidCards, getZodiac } from '../../utils/util'
 import { getContentFromFirestore, getPathsFromFirestore } from '../../services/contentFirebase'
 import cn from 'classnames'
 import ReactPlayer from 'react-player'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useOrientation } from 'react-use'
 
 function Index({ content }) {
   // From URL
@@ -79,12 +80,7 @@ function Index({ content }) {
           </LinkWrapper>
           {
             videoFlag == true && combinations[tematic][card].hasOwnProperty('urlVideoCombination') && urlVideoCombination != ""
-            ? <div >
-                <ReactPlayer url={urlVideoCombination}
-                  width='100%'
-                  controls={true}
-                />
-              </div>
+            ? <VideoItem urlVideoCombination={urlVideoCombination}/>
             : null
           }
         </div>
@@ -237,7 +233,6 @@ const ShowTranscription = ({extendedFlag, textTranscription, isShowContentCombin
           ? <>
               { isShowContentCombination && (
               <div
-                style={{ border: "1px solid #ccc", borderRadius: "8px", margin: "1rem" }}
                 className="container"
               >
                 <div style={{ textAlign: 'center', fontSize: '1.35rem', margin: '.6rem 0' }}>
@@ -271,6 +266,63 @@ const ShowTranscription = ({extendedFlag, textTranscription, isShowContentCombin
         )}
       </>)
   }
+}
+
+let landscapeMode = true;
+
+const VideoItem = ({urlVideoCombination}) => {
+  const [mobile, setMobile] = useState();
+  const [element, setElement] = useState();
+  const [doc, setDoc]= useState();
+  const [play, setPlay] = useState(false);
+  const state = useOrientation();
+
+  useEffect(() => {
+    let userAgent = window.navigator.userAgent;
+    let isMobile = Boolean(userAgent.match(
+      /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|Macintosh|WPDesktop/i
+    ))
+
+    setMobile(isMobile);
+    setElement(window.document.getElementById('videoPlayer'))
+    setDoc(window.document);
+    }, []);
+
+    if(state.type == "landscape-primary"){
+      console.log(state.type)
+      if(mobile == true && play == true && landscapeMode == true){
+        console.log(element);
+        element.requestFullscreen()
+            .then(() => { console.log('Element entered fullscreen mode successfully.');}
+          )
+            .catch(error => {console.log(`Entering fullscreen mode failed:${error.message}`);
+          });
+      }else{
+        landscapeMode = false;
+      }
+    } else if(state.type == "portrait-primary"){
+      console.log(state.type)
+      if(doc.fullscreenElement != null){
+        doc.exitFullscreen();
+      }
+      else{
+        landscapeMode = true;
+      }
+    }
+
+  return (
+    <div>
+      <ReactPlayer
+        url={urlVideoCombination}
+        width='100%'
+        controls={true}
+        id='videoPlayer'
+        onPlay={() => setPlay(true)}
+        onPause={() => setPlay(false)}
+        onEnded={() => setPlay(false)}
+      />
+    </div>
+  )
 }
 
 export default Index
