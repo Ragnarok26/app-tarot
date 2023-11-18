@@ -226,18 +226,15 @@ const ShowTranscription = ({extendedFlag, textTranscription, isShowContentCombin
     return(
       <>
         <div className='container'>
-          <span onClick={()=> {setExpandedText(!expandedText)}}> {expandedText == false ?<span style={{fontSize: '20px'}}>►</span> : <span>▼</span> } {textTranscription}</span>
+          <span onClick={()=> {setExpandedText(!expandedText)}}>
+            {expandedText == false ?<span style={{fontSize: '20px'}}>►</span> : <span>▼</span> } {textTranscription}
+          </span>
         </div>
         {
           expandedText == true
           ? <>
               { isShowContentCombination && (
-              <div
-                className="container"
-              >
-                <div style={{ textAlign: 'center', fontSize: '1.35rem', margin: '.6rem 0' }}>
-                  <b>{cardInterpretationsLabel}</b>
-                </div>
+              <div className="container" >
                 <div style={{ fontSize: '.96rem', margin: '1rem 0' }}>
                   <p dangerouslySetInnerHTML={{ __html: combinations && content }}></p>
                 </div>
