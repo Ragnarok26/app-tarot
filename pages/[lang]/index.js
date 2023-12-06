@@ -43,7 +43,6 @@ function Index({ content }) {
   const videoFlag = tematics?.[tematic]?.videoFlag
   const urlVideoCombination = combinations[tematic]?.[card]?.urlVideoCombination
   const expandedTextFlag = tematics?.[tematic]?.expandedTextFlag
-  const textTranscription = "Ver transcripción"
 
   if (optionsCard?.isShowContentCombination) {
     if (combinations && combinations[tematic] && !combinations[tematic][card]?.active) {
@@ -185,7 +184,7 @@ function Index({ content }) {
 
         <ShowTranscription
           extendedFlag={expandedTextFlag}
-          textTranscription={textTranscription}
+          textTranscription={content.labels.textTranscription}
           isShowContentCombination={optionsCard?.isShowContentCombination}
           cardInterpretationsLabel={content.labels.cardInterpretationsLabel}
           combinations={combinations}
