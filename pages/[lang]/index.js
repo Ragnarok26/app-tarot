@@ -260,6 +260,7 @@ const ShowTranscription = ({extendedFlag, textTranscription, isShowContentCombin
 }
 
 let landscapeMode = true;
+
 const VideoItem = ({urlVideoCombination}) => {
   const [mobile, setMobile] = useState();
   const [element, setElement] = useState();
